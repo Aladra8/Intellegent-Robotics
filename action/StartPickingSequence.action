@@ -1,0 +1,11 @@
+# Goal
+string mode # 0: Down, 1: Up
+string objectType
+string objectID
+geometry_msgs/PoseStamped pose
+---
+# Result
+bool success
+---
+# Feedback
+# (Optional, can be left empty if no feedback is needed)

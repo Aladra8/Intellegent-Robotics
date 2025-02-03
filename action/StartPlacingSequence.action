@@ -1,0 +1,12 @@
+# Goal
+string objectID
+string objectType
+geometry_msgs/PoseStamped pose
+
+---
+# Result
+bool success
+
+---
+# Feedback
+string status

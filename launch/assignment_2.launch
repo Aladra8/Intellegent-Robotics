@@ -1,0 +1,33 @@
+<launch>
+    <!-- Define arguments with default values -->
+    <arg name="world_name" default="iaslab_assignment2"/>  <!-- World name for the simulation -->
+    <arg name="arm_ready_delay" default="20"/>  <!-- Delay to ensure the arm is fully tucked in before proceeding -->
+
+    <!-- Set environment variable to enable the laser scanner -->
+    <env name="LIBGL_ALWAYS_SOFTWARE" value="1"/>
+
+    <!-- Start the Tiago simulation with the specified world -->
+    <include file="$(find tiago_iaslab_simulation)/launch/start_simulation.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+    </include>
+
+    <!-- Wait for the arm to fully tuck in before executing further commands -->
+    <node pkg="roslaunch" type="sleep" name="wait_arm_tucked" args="$(arg arm_ready_delay)"/>
+
+    <!-- Start the laser scanner to enable object detection -->
+    <node pkg="tiago_iaslab_simulation" type="start_laser_scanner.launch" name="laser_scanner" output="screen"/>
+
+    <!-- Launch the navigation stack for autonomous movement -->
+    <include file="$(find tiago_iaslab_simulation)/launch/navigation.launch"/>
+
+    <!-- Start AprilTag detection for object localization -->
+    <include file="$(find tiago_iaslab_simulation)/launch/apriltag2.launch"/>
+
+    <!-- Start the service that provides the straight-line equation (y = mx + q) for object placement -->
+    <node pkg="tiago_iaslab_simulation" type="get_straightline_node" name="straight_line_service" output="screen"/>
+
+    <!-- Start the assignment nodes for object detection, processing, and manipulation -->
+    <node pkg="assignment_2" type="node_A" name="node_A" output="screen"/>  <!-- Handles object placement logic -->
+    <node pkg="assignment_2" type="node_B" name="node_B" output="screen"/>  <!-- Detects objects using AprilTag -->
+    <node pkg="assignment_2" type="node_C" name="node_C" output="screen"/>  <!-- Handles MoveIt! for object manipulation -->
+</launch>

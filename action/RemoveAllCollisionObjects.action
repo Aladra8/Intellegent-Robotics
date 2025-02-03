@@ -1,0 +1,7 @@
+# Goal definition
+bool goal
+---
+# Result definition
+bool success
+---
+# Feedback definition
